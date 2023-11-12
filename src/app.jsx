@@ -26,6 +26,18 @@ export function App() {
   const inputs = (e) => {
     setUserInput(e.target.value);
   };
+  const removeBtn = (e) => {
+    const removeFromApi = apiData.filter((item) => item.title !== e);
+    setApiData(removeFromApi);
+    const storedData = JSON.parse(localStorage.getItem("userInput")) || [];
+    const removeFromStorage = storedData.filter((item) => item !== e);
+    if (removeFromStorage.length > 0) {
+      localStorage.setItem("userInput", JSON.stringify(removeFromStorage)); // Update the localStorage
+    } else {
+      localStorage.clear("userInput");
+    }
+    setUserData(removeFromStorage);
+  };
   useEffect(() => {
     const get = async () => {
       fetch("https://jsonplaceholder.typicode.com/todos")
@@ -101,8 +113,8 @@ export function App() {
                   {item}
                   <button
                     className="removeBtn"
-                    onClick={(e) => {
-                      allData.remove(e);
+                    onClick={() => {
+                      removeBtn(item);
                     }}
                   >
                     Remove
