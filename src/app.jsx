@@ -1,131 +1,36 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React from "react";
+import Search from "./search.jsx";
+import User from "./User.jsx";
+import useCheckBox from "./checkBox.jsx";
+import { api } from "./api.jsx";
+import { useAllData } from "./allData.jsx";
+import { useRemoveBtn } from "./remove.jsx";
+import RemoveAllBtn from "./removeAllBtn.jsx";
+import FinishedBtn from "./FinishedBtn.jsx";
 export function App() {
-  const [userInput, setUserInput] = useState([]);
-  const [apiData, setApiData] = useState([]);
-  const [userData, setUserData] = useState([]);
-  const [allData, setAllData] = useState([]);
-  const [search, setSearch] = useState([]);
-  const [finished, setFinished] = useState({});
-  const [checkboxes, setCheckboxes] = useState({});
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && userInput.trim() !== "") {
-      const storage = [...userData, userInput];
-      setUserData(storage);
-      localStorage.setItem("userInput", JSON.stringify(storage));
-      setUserInput("");
-    }
-  };
-  const click = () => {
-    if (userInput.trim() !== "") {
-      const storage = [...userData, userInput];
-      setUserData(storage);
-      localStorage.setItem("userInput", JSON.stringify(storage));
-      setUserInput("");
-    }
-  };
-  const inputs = (e) => {
-    setUserInput(e.target.value);
-  };
-  const removeBtn = (e) => {
-    const removeFromApi = apiData.filter((item) => item.title !== e);
-    setApiData(removeFromApi);
-    const storedData = JSON.parse(localStorage.getItem("userInput")) || [];
-    const removeFromStorage = storedData.filter((item) => item !== e);
-    if (removeFromStorage.length > 0) {
-      localStorage.setItem("userInput", JSON.stringify(removeFromStorage));
-    } else {
-      localStorage.clear("userInput");
-    }
-    setUserData(removeFromStorage);
-  };
+  // const { handleKeyPress, userInput, setUserInput, click } = useUser();
 
-  const checkit = () => {
-    const toggle = {};
-    const allChecked = Object.values(checkboxes).every((value) => value);
-    for (const item of allData) {
-      toggle[item] = !allChecked;
-    }
-    setCheckboxes(toggle);
+  const { removeBtn } = useRemoveBtn((updatedAllData) => {
+    setAllData(updatedAllData);
+  });
+  const onUpdateAll = (updatedAllData) => {
+    setAllData(updatedAllData);
   };
-  useEffect(() => {
-    const get = async () => {
-      fetch("https://jsonplaceholder.typicode.com/todos")
-        .then((res) => {
-          return res.json();
-        })
-        .then((i) => {
-          setApiData(i);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    };
-    get();
-  }, []);
-  useEffect(() => {
-    setAllData([...apiData.map((e) => e.title), ...userData]);
-  }, [apiData, userData]);
-
-  const searchInput = (e) => {
-    usersearch = e.target.value;
-    if (usersearch > "") {
-      const founded = allData.filter((i) => i.includes(usersearch));
-      setSearch(founded);
-    } else {
-      setSearch([]);
-    }
+  const { allData, setAllData } = useAllData();
+  const { checkboxes, handleCheckboxChange, checkit } = useCheckBox();
+  const handleInputChange = (item) => {
+    handleCheckboxChange(item);
   };
-  useEffect(() => {
-    const get = localStorage.getItem("userInput");
-    if (get) {
-      setUserData(JSON.parse(get));
-    }
-  }, []);
-  useEffect(() => {
-    const Checkboxes = {};
-    for (const item of allData) {
-      Checkboxes[item] = false;
-    }
-    setCheckboxes(Checkboxes);
-  }, [allData]);
 
   return (
     <>
       {" "}
       <div className="container">
-        <div className="searchContainer">
-          <label htmlFor="search">Search : </label>
-          <input
-            type="text"
-            className="searchInput"
-            placeholder="Search"
-            id="search"
-            onChange={searchInput}
-          />
-          <div className="searchResults">
-            {search.map((e) => {
-              return <div>{e}</div>;
-            })}
-          </div>
-        </div>
-
+        <Search allData={allData} onUpdateAllData={onUpdateAll} />
         <div>
-          <input
-            type="text"
-            id="todoInput"
-            placeholder="Enter an Item"
-            onKeyPress={handleKeyPress}
-            onChange={inputs}
-            value={userInput}
-            className={userInput === "" ? "red" : ""}
-          />
-          <button className="enterBtn" onClick={click}>
-            Enter
-          </button>
-
+          <User />
           <ol className="todoItems">
-            {allData.map((item, num) => {
+            {allData?.map((item, num) => {
               return (
                 <li key={num} className="list">
                   {item}
@@ -140,74 +45,18 @@ export function App() {
                   <input
                     type="checkbox"
                     checked={checkboxes[item] || false}
-                    onChange={(e) => {
-                      const checking = e.target.checked;
-                      setCheckboxes((prev) => ({
-                        ...prev,
-                        [item]: checking,
-                      }));
-                    }}
+                    onChange={(e) => handleInputChange(item)}
                   />
                 </li>
               );
             })}
           </ol>
-
-          <button className="enterAllBtn" onClick={checkit}>
+          <button onClick={checkit} className="selectAllBtn">
             Select All
           </button>
-          <button
-            className="finishBtn"
-            onClick={() => {
-              const selectedItems = Object.keys(checkboxes).filter(
-                (key) => checkboxes[key]
-              );
-              if (selectedItems.length > 0) {
-                const updatedFinished = { ...finished, ...checkboxes };
-                setFinished(updatedFinished);
-
-                const updatedAllData = allData.filter(
-                  (item) => !selectedItems.includes(item)
-                );
-                setAllData(updatedAllData);
-              }
-            }}
-          >
-            Finished Selected
-          </button>
-          <button
-            className="removeAllBtn"
-            onClick={() => {
-              const selectedItems = Object.keys(checkboxes).filter(
-                (key) => checkboxes[key]
-              );
-              const updatedAllData = allData.filter(
-                (item) => !selectedItems.includes(item)
-              );
-              setAllData(updatedAllData);
-              const storedData =
-                JSON.parse(localStorage.getItem("userInput")) || [];
-              const updatedStoredData = storedData.filter(
-                (item) => !selectedItems.includes(item)
-              );
-              if (updatedStoredData.length > 0) {
-                localStorage.setItem(
-                  "userInput",
-                  JSON.stringify(updatedStoredData)
-                );
-              } else {
-                localStorage.removeItem("userInput");
-              }
-            }}
-          >
-            Remove Selected
-          </button>
+          <RemoveAllBtn checkboxes={checkboxes} onUpdateAllData={onUpdateAll} />
+          <FinishedBtn checkboxes={checkboxes} onUpdateAllData={onUpdateAll} />
         </div>
-      </div>
-      <div className="finishedItems">
-        {Object.keys(finished).map((item, index) => (
-          <div key={index}>{item}</div>
-        ))}
       </div>
     </>
   );
