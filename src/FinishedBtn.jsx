@@ -19,7 +19,6 @@ const FinishedBtn = ({ checkboxes, onUpdateAllData, allData, setAllData }) => {
       setAllData(updatedAllData);
       onUpdateAllData(updatedAllData);
     }
-    console.log(typeof onUpdateAllData);
   };
   return (
     <>

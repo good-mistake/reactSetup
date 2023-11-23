@@ -12,7 +12,10 @@ const User = ({ handleKeyPress, click, inputs, userInput }) => {
         value={userInput}
         className={userInput === "" ? "red" : ""}
       />
-      <button className="enterBtn" onClick={click}>
+      <button
+        className="enterBtn"
+        onClick={click} /*disabled={userInput === ""}*/
+      >
         Enter
       </button>
     </>

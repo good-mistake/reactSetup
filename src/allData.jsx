@@ -3,6 +3,7 @@ export const useAllData = () => {
   const [userInput, setUserInput] = useState([]);
   const [allData, setAllData] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && userInput.trim() !== "") {
       const updatedUserData = [...userData, userInput.trim()];
@@ -29,6 +30,7 @@ export const useAllData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const response = await fetch(
           "https://jsonplaceholder.typicode.com/todos"
         );
@@ -43,8 +45,10 @@ export const useAllData = () => {
           }
         }
         setAllData(datas);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching API data:", error);
+        setLoading(false);
       }
     };
     fetchData();
@@ -67,5 +71,6 @@ export const useAllData = () => {
     userInput,
     setUserInput,
     inputs,
+    loading,
   };
 };

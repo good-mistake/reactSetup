@@ -9,8 +9,15 @@ import RemoveAllBtn from "./removeAllBtn.jsx";
 import FinishedBtn from "./FinishedBtn.jsx";
 
 export function App() {
-  const { allData, setAllData, userInput, handleKeyPress, click, inputs } =
-    useAllData();
+  const {
+    allData,
+    setAllData,
+    userInput,
+    handleKeyPress,
+    click,
+    inputs,
+    loading,
+  } = useAllData();
   const handleUpdateAllData = (updatedData) => {
     setAllData(updatedData);
   };
@@ -32,28 +39,35 @@ export function App() {
             inputs={inputs}
             userInput={userInput}
           />
-          <ol className="todoItems">
-            {allData?.map((item, num) => {
-              return (
-                <li key={num} className="list">
-                  {item}
-                  <button
-                    className="removeBtn"
-                    onClick={() => {
-                      removeBtn(item);
-                    }}
-                  >
-                    Remove
-                  </button>{" "}
-                  <input
-                    type="checkbox"
-                    checked={checkboxes[item] || false}
-                    onChange={(e) => handleInputChange(item)}
-                  />
-                </li>
-              );
-            })}
-          </ol>
+          {loading ? (
+            <div>
+              <span>...Loading</span>
+            </div>
+          ) : (
+            <ol className="todoItems">
+              {allData?.map((item, num) => {
+                return (
+                  <li key={num} className="list">
+                    {item}
+                    <button
+                      className="removeBtn"
+                      onClick={() => {
+                        removeBtn(item);
+                      }}
+                    >
+                      Remove
+                    </button>{" "}
+                    <input
+                      type="checkbox"
+                      checked={checkboxes[item] || false}
+                      onChange={(e) => handleInputChange(item)}
+                    />
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+
           <button onClick={checkit} className="selectAllBtn">
             Select All
           </button>
