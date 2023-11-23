@@ -17,7 +17,7 @@ export default Search = ({ allData, onUpdateAllData }) => {
     if (search.length > 0) {
       onUpdateAllData(search);
     }
-  }, [allData]);
+  }, []);
 
   return (
     <>

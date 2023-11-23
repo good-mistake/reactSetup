@@ -1,22 +1,21 @@
 import { useState, useEffect } from "react";
-import { shareddata } from "./shareddata";
+
 export const api = () => {
   const [apiData, setApiData] = useState([]);
   useEffect(() => {
     const get = async () => {
-      await fetch("https://jsonplaceholder.typicode.com/todos")
-        .then((res) => {
-          return res.json();
-        })
-        .then((i) => {
-          setApiData(i);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      try {
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/todos"
+        );
+        const data = await response.json();
+        setApiData(data);
+      } catch (error) {
+        console.error("Error fetching API data:", error);
+      }
     };
     get();
   }, []);
 
-  return { apiData, setApiData };
+  return { apiData };
 };

@@ -2,22 +2,20 @@ import React from "react";
 import Search from "./search.jsx";
 import User from "./User.jsx";
 import useCheckBox from "./checkBox.jsx";
-import { api } from "./api.jsx";
+
 import { useAllData } from "./allData.jsx";
 import { useRemoveBtn } from "./remove.jsx";
 import RemoveAllBtn from "./removeAllBtn.jsx";
 import FinishedBtn from "./FinishedBtn.jsx";
-export function App() {
-  // const { handleKeyPress, userInput, setUserInput, click } = useUser();
+import { useEffect } from "react";
 
-  const { removeBtn } = useRemoveBtn((updatedAllData) => {
-    setAllData(updatedAllData);
-  });
-  const onUpdateAll = (updatedAllData) => {
-    setAllData(updatedAllData);
-  };
+export function App() {
   const { allData, setAllData } = useAllData();
-  const { checkboxes, handleCheckboxChange, checkit } = useCheckBox();
+  const handleUpdateAllData = (updatedData) => {
+    setAllData(updatedData);
+  };
+  const { removeBtn } = useRemoveBtn(allData, setAllData, handleUpdateAllData);
+  const { checkboxes, handleCheckboxChange, checkit } = useCheckBox(allData);
   const handleInputChange = (item) => {
     handleCheckboxChange(item);
   };
@@ -26,7 +24,7 @@ export function App() {
     <>
       {" "}
       <div className="container">
-        <Search allData={allData} onUpdateAllData={onUpdateAll} />
+        <Search allData={allData} onUpdateAllData={handleUpdateAllData} />
         <div>
           <User />
           <ol className="todoItems">
@@ -54,8 +52,18 @@ export function App() {
           <button onClick={checkit} className="selectAllBtn">
             Select All
           </button>
-          <RemoveAllBtn checkboxes={checkboxes} onUpdateAllData={onUpdateAll} />
-          <FinishedBtn checkboxes={checkboxes} onUpdateAllData={onUpdateAll} />
+          <RemoveAllBtn
+            checkboxes={checkboxes}
+            onUpdateAllData={handleUpdateAllData}
+            allData={allData}
+            setAllData={setAllData}
+          />
+          <FinishedBtn
+            checkboxes={checkboxes}
+            onUpdateAllData={handleUpdateAllData}
+            allData={allData}
+            setAllData={setAllData}
+          />
         </div>
       </div>
     </>

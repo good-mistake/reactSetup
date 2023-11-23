@@ -1,21 +1,26 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAllData } from "./allData";
-const FinishedBtn = ({ checkboxes, onUpdateAllData }) => {
+const FinishedBtn = ({ checkboxes, onUpdateAllData, allData, setAllData }) => {
   const [finished, setFinished] = useState({});
-  const { allData, setAllData } = useAllData();
+  //   const { allData, setAllData } = useAllData();
   const finish = () => {
     const selectedItems = Object.keys(checkboxes).filter(
       (key) => checkboxes[key]
     );
     if (selectedItems.length > 0) {
-      const updatedAllData = allData.filter(
-        (item) => !selectedItems.includes(item)
-      );
-      setFinished(selectedItems);
+      const updatedAllData = allData
+        ? allData.filter((item) => !selectedItems.includes(item))
+        : [];
+      console.log(selectedItems);
+      setFinished((prevFinished) => {
+        return { ...prevFinished, ...selectedItems };
+      });
+
       setAllData(updatedAllData);
       onUpdateAllData(updatedAllData);
     }
+    console.log(typeof onUpdateAllData);
   };
   return (
     <>

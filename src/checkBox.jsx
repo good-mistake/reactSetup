@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAllData } from "./allData";
 
-const useCheckBox = () => {
-  const { allData } = useAllData();
+const useCheckBox = (allData) => {
+  // const { allData } = useAllData();
   const [checkboxes, setCheckboxes] = useState({});
 
   useEffect(() => {
@@ -32,7 +32,6 @@ const useCheckBox = () => {
       return updatedCheckboxes;
     });
   };
-
   return {
     checkboxes,
     handleCheckboxChange,

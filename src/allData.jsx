@@ -1,17 +1,14 @@
 import { useState, useEffect } from "react";
 import { api } from "./api";
 import { shareddata } from "./shareddata";
-
 export const useAllData = () => {
   const [allData, setAllData] = useState([]);
-  const { apiData } = api();
   const { userData } = shareddata();
-
-  // const { userData } = useUser();
+  const { apiData } = api();
 
   useEffect(() => {
-    const apiTitle = apiData.map((e) => e.title);
-    const datas = [...apiTitle, ...userData];
+    // const apiTitle = apiData.map((e) => e.title);
+    const datas = [...apiData.map((e) => e.title), ...userData];
     setAllData(datas);
   }, [apiData, userData]);
 
@@ -19,7 +16,7 @@ export const useAllData = () => {
     if (!i) {
       return allData;
     }
-    return allData.filter((item = item.includes(i)));
+    return allData.filter((item) => item.includes(i));
   };
   return { allData, setAllData, forSearch };
 };
