@@ -1,9 +1,6 @@
 import React from "react";
-import { shareddata } from "./shareddata";
 
-const User = () => {
-  const { userInput, inputs, handleKeyPress, click } = shareddata();
-
+const User = ({ handleKeyPress, click, inputs, userInput }) => {
   return (
     <>
       <input

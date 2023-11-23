@@ -1,6 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { useAllData } from "./allData";
+import { useState } from "react";
 const FinishedBtn = ({ checkboxes, onUpdateAllData, allData, setAllData }) => {
   const [finished, setFinished] = useState({});
   //   const { allData, setAllData } = useAllData();

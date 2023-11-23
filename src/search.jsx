@@ -1,8 +1,6 @@
-import { useAllData } from "./allData.jsx";
 import { useState, useEffect } from "react";
 export default Search = ({ allData, onUpdateAllData }) => {
   const [search, setSearch] = useState([]);
-
   const searchInput = (e) => {
     const usersearch = e.target.value;
     if (usersearch > "") {
@@ -18,7 +16,6 @@ export default Search = ({ allData, onUpdateAllData }) => {
       onUpdateAllData(search);
     }
   }, []);
-
   return (
     <>
       {" "}

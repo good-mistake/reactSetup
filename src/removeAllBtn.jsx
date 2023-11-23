@@ -1,5 +1,4 @@
-import { useAllData } from "./allData";
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 export default RemoveAllBtn = ({
   checkboxes,
@@ -7,8 +6,6 @@ export default RemoveAllBtn = ({
   allData,
   setAllData,
 }) => {
-  // const { allData, setAllData } = useAllData();
-
   const removeAll = () => {
     const itemsToRemove = Object.keys(checkboxes).filter(
       (key) => checkboxes[key]

@@ -7,10 +7,10 @@ import { useAllData } from "./allData.jsx";
 import { useRemoveBtn } from "./remove.jsx";
 import RemoveAllBtn from "./removeAllBtn.jsx";
 import FinishedBtn from "./FinishedBtn.jsx";
-import { useEffect } from "react";
 
 export function App() {
-  const { allData, setAllData } = useAllData();
+  const { allData, setAllData, userInput, handleKeyPress, click, inputs } =
+    useAllData();
   const handleUpdateAllData = (updatedData) => {
     setAllData(updatedData);
   };
@@ -26,7 +26,12 @@ export function App() {
       <div className="container">
         <Search allData={allData} onUpdateAllData={handleUpdateAllData} />
         <div>
-          <User />
+          <User
+            handleKeyPress={handleKeyPress}
+            click={click}
+            inputs={inputs}
+            userInput={userInput}
+          />
           <ol className="todoItems">
             {allData?.map((item, num) => {
               return (
